@@ -1,5 +1,5 @@
 {
-  "name": "mysql-tool",
+  "name": "@goldenapple/mysql-tool",
   "version": "1.0.0",
   "description": "nodejs使用的mysql相關工具包",
   "main": "mysql-tool.js",
