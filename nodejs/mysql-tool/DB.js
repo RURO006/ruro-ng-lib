@@ -153,7 +153,7 @@ module.exports = class DB {
 
   /**
    * 批次執行，方便用。
-   * @param {Array<{commandText, value}>} commandArray [{commandText, value}]，value可以是[變數,'值']或function:(results,index)=>return [results[0],'qwe'];
+   * @param {Array<{commandText, value,resultName}>} commandArray [{commandText, value}]，value可以是[變數,'值']或function:(results,index)=>return [results[0],'qwe'];。resultName代表result回傳的名稱，用來當作新的參考。
    * @param {boolean} usePool 是否使用Pool，預設false。
    * @param {boolean} useTrans 是否使用交易，預設false。
    */
@@ -192,6 +192,10 @@ module.exports = class DB {
             commandArray[i].commandText,
             value
           );
+          // 如果有設定resultName，則新增resultName當回傳參考。
+          if (commandArray[i].resultName) {
+            results[commandArray[i].resultName] = oneResult;
+          }
           results.push(oneResult);
         }
         await this.commitTrans(conn);
@@ -218,6 +222,10 @@ module.exports = class DB {
           conn,
           i == commandArray.length - 1
         );
+        // 如果有設定resultName，則新增resultName當回傳參考。
+        if (commandArray[i].resultName) {
+          results[commandArray[i].resultName] = oneResult;
+        }
         results.push(oneResult);
       }
     }
