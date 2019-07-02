@@ -1,0 +1,9 @@
+{
+  "name": "@goldenapple/img-upload",
+  "version": "0.1.0",
+  "peerDependencies": {
+    "@angular/common": "^7.2.0",
+    "@angular/core": "^7.2.0",
+    "md5-typescript": "^1.0.5"
+  }
+}
