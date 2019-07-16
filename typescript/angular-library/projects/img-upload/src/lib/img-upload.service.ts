@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Md5 } from "md5-typescript";
+import { ImgOrientationRotate } from "./img-orientation-rotate";
 
 declare module AWS {
   export class config {
@@ -312,5 +313,21 @@ export class ImgUploadService {
     }
     imgElement.remove();
     return OUT;
+  }
+
+  /**
+   * 取得修正過EXIF Orientation後的圖片的ObjectUrl
+   * @param file 圖片(File)
+   */
+  async getFixImgObjUrl(file: File) {
+    let objUrl;
+    const imgOrientationRotate = new ImgOrientationRotate();
+    try {
+      const dataUrl = await imgOrientationRotate.fixImg(file);
+      objUrl = URL.createObjectURL(this.dataURLtoBlob(dataUrl));
+    } catch {
+      objUrl = URL.createObjectURL(file);
+    }
+    return objUrl;
   }
 }

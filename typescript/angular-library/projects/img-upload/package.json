@@ -1,7 +1,7 @@
 {
   "name": "@goldenapple/img-upload",
   "description": "angular圖片上傳service工具。",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "peerDependencies": {
     "@angular/common": "^8.1.0",
     "@angular/core": "^8.1.0",
