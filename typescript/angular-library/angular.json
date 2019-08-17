@@ -169,6 +169,41 @@
           }
         }
       }
+    },
+    "InfiniteLoading": {
+      "projectType": "library",
+      "root": "projects/infinite-loading",
+      "sourceRoot": "projects/infinite-loading/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/infinite-loading/tsconfig.lib.json",
+            "project": "projects/infinite-loading/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/infinite-loading/src/test.ts",
+            "tsConfig": "projects/infinite-loading/tsconfig.spec.json",
+            "karmaConfig": "projects/infinite-loading/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/infinite-loading/tsconfig.lib.json",
+              "projects/infinite-loading/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "angular-library"
