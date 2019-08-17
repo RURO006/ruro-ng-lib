@@ -1,7 +1,7 @@
 {
   "name": "@goldenapple/infinite-loading",
   "description": "無限載入的觸發器。",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "peerDependencies": {
     "@angular/common": "^8.2.0",
     "@angular/core": "^8.2.0"
