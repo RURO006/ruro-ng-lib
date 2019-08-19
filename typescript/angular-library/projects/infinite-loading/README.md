@@ -1,5 +1,8 @@
 # 使用方法
 
+module.ts
+imports: [InfiniteLoadingModule],
+
 .html
 <div #infiniteLoadingName="InfiniteLoadingDirective"
   InfiniteLoading
