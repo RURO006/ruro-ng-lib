@@ -204,6 +204,41 @@
           }
         }
       }
+    },
+    "LiffExtend": {
+      "projectType": "library",
+      "root": "projects/liff-extend",
+      "sourceRoot": "projects/liff-extend/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/liff-extend/tsconfig.lib.json",
+            "project": "projects/liff-extend/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/liff-extend/src/test.ts",
+            "tsConfig": "projects/liff-extend/tsconfig.spec.json",
+            "karmaConfig": "projects/liff-extend/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/liff-extend/tsconfig.lib.json",
+              "projects/liff-extend/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "angular-library"

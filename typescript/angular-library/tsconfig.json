@@ -31,6 +31,12 @@
       ],
       "infinite-loading/*": [
         "dist/infinite-loading/*"
+      ],
+      "liff-extend": [
+        "dist/liff-extend"
+      ],
+      "liff-extend/*": [
+        "dist/liff-extend/*"
       ]
     }
   }

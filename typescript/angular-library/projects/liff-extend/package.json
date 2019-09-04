@@ -1,0 +1,9 @@
+{
+  "name": "@goldenapple/liff-extend",
+  "description": "line的liff用的東西，使用前請在index.html引用liff的sdk",
+  "version": "1.0.0",
+  "peerDependencies": {
+    "@angular/common": "^8.1.0",
+    "@angular/core": "^8.1.0"
+  }
+}
