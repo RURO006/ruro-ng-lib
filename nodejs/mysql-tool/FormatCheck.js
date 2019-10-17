@@ -4,7 +4,6 @@ module.exports = class FormatCheck {
     /**
      * 檢查字串是否空值或長度為0
      * 461:字串空值或長度為0
-     * 462:不合法的格式
      * @param {*} str 字串
      * @param {*} columnsName 欄位名稱
      */
@@ -19,6 +18,7 @@ module.exports = class FormatCheck {
 
     /**
      * 檢查字串是否為電話格式
+     * 462:不合法的格式
      * @param {string} str 電話
      */
     static checkPhone(str) {
@@ -32,6 +32,8 @@ module.exports = class FormatCheck {
 
     /**
      * 檢查數字是否合法
+     * 461:字串空值或長度為0
+     * 462:不合法的格式
      * @param {number} num 數字
      * @param {number} min 最小值
      * @param {number} max 最大值
@@ -52,6 +54,7 @@ module.exports = class FormatCheck {
 
     /**
      * 檢查字串是否為email格式
+     * 462:不合法的格式
      * @param {string} str email
      */
     static checkEmail(str) {
@@ -65,6 +68,7 @@ module.exports = class FormatCheck {
 
     /**
      * 檢查str是否為_enum裡面的字串
+     * 462:不合法的格式
      * @param {string} str 字串
      * @param {string} columnsName 欄位名稱
      * @param {Array<string>} _enum 必須符合的字串陣列
@@ -79,6 +83,7 @@ module.exports = class FormatCheck {
 
     /**
      * 檢查陣列的欄位是否有重複出現
+     * 462:不合法的格式
      * @param {*} list
      * @param {*} columnsName list中要檢查的欄位名稱
      * @param {*} showName 顯示錯誤的名稱
