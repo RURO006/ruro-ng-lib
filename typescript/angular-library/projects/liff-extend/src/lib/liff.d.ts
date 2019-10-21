@@ -1,8 +1,10 @@
 export interface Liff {
-  language: string;
-  liffData: Context;
-  isInLiff: boolean;
-  init(successCallback: (data: SuccessData) => void, errorCallback: (err: ErrorData) => void);
+  init(options: { liffId: string }): Promise<SuccessData>;
+  isLoggedIn(): boolean;
+  isInClient(): boolean;
+  login();
+  logout();
+  scanCode(): Promise<any>;
   sendMessages(msg: Array<any>): Promise<any>;
   getProfile(): Promise<{ userId: string; displayName: string; pictureUrl: string; statusMessage: string }>;
   closeWindow();
