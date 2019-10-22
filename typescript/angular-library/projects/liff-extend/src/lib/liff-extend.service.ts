@@ -7,10 +7,10 @@ declare var liff: Liff;
 })
 export class LiffExtendService {
   private liffId: string;
-  private initOnce: Promise<void>;
+  private loadOnce: Promise<void>;
 
   async sendMessages(msg: Array<any>): Promise<any> {
-    await this.init();
+    await this.loadScript();
     if (!liff.isInClient()) {
       throw new Error(`liff is not in client!`);
     } else {
@@ -18,14 +18,27 @@ export class LiffExtendService {
     }
   }
   async getProfile(): Promise<{ userId: string; displayName: string; pictureUrl: string; statusMessage: string }> {
-    await this.init();
+    await this.loadScript();
     return liff.getProfile();
+  }
+  /**
+   * 檢查是否登入
+   */
+  isLoggedIn() {
+    return liff.isLoggedIn();
+  }
+
+  /**
+   * 檢查是否在liff裡面
+   */
+  isInClient() {
+    return liff.isInClient();
   }
   /**
    * 掃描QR code
    */
   async scanCode() {
-    await this.init();
+    await this.loadScript();
     if (!liff.isInClient()) {
       throw new Error(`liff is not in client!`);
     } else {
@@ -33,7 +46,7 @@ export class LiffExtendService {
     }
   }
   async closeWindow() {
-    await this.init();
+    await this.loadScript();
     if (!liff.isInClient()) {
       throw new Error(`liff is not in client!`);
     } else {
@@ -41,25 +54,29 @@ export class LiffExtendService {
     }
   }
   async openWindow(obj: { url: string; external: boolean }) {
-    await this.init();
+    await this.loadScript();
     liff.openWindow(obj);
   }
 
   async login() {
-    liff.login();
+    // start to use LIFF's api
+    if (!liff.isLoggedIn()) {
+      // set `redirectUri` to redirect the user to a URL other than the front page of your LIFF app.
+      liff.login();
+    }
   }
 
   async logout() {
     liff.logout();
   }
 
-  async init() {
+  async loadScript() {
     if (!this.liffId) {
-      throw new Error('請呼叫initLiffId(myLiffId))，來初始化liffId');
+      throw new Error('請呼叫init(myLiffId)來初始化!');
     }
     // 只初始化一次
-    if (!this.initOnce) {
-      return (this.initOnce = new Promise(async (allOk) => {
+    if (!this.loadOnce) {
+      return (this.loadOnce = new Promise(async (allOk) => {
         await new Promise((resolve, reject) => {
           const scriptElem = document.createElement('script');
           scriptElem.src = `https://static.line-scdn.net/liff/edge/2.1/sdk.js`;
@@ -72,23 +89,20 @@ export class LiffExtendService {
         await liff.init({
           liffId: this.liffId,
         });
-        // start to use LIFF's api
-        if (!liff.isLoggedIn()) {
-          // set `redirectUri` to redirect the user to a URL other than the front page of your LIFF app.
-          liff.login();
-        }
+
         allOk();
       }));
     } else {
-      return this.initOnce;
+      return this.loadOnce;
     }
   }
 
   /**
    * @param myLiffId The LIFF ID of the selected element ex: 1234567890-abcedfgh
    */
-  initLiffId(myLiffId: string) {
+  async init(myLiffId: string) {
     this.liffId = myLiffId;
+    await this.loadScript();
   }
   constructor() {}
 }
