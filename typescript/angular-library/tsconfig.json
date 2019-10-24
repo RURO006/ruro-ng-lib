@@ -37,6 +37,12 @@
       ],
       "liff-extend/*": [
         "dist/liff-extend/*"
+      ],
+      "acl": [
+        "dist/acl"
+      ],
+      "acl/*": [
+        "dist/acl/*"
       ]
     }
   }
