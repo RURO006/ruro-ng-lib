@@ -1,13 +1,7 @@
 export class ImgOrientationRotate {
   af2Base64(af) {
-    const base64 = btoa(
-      [].reduce.call(
-        new Uint8Array(af),
-        (p, c) => p + String.fromCharCode(c),
-        ""
-      )
-    );
-    return "data:image/jpeg;base64," + base64;
+    const base64 = btoa([].reduce.call(new Uint8Array(af), (p, c) => p + String.fromCharCode(c), ''));
+    return 'data:image/jpeg;base64,' + base64;
   }
   async readFile(file) {
     const FR = new FileReader();
@@ -15,7 +9,7 @@ export class ImgOrientationRotate {
       FR.onloadend = (evt: any) => {
         resolve(evt.target.result);
       };
-      FR.onerror = err => {
+      FR.onerror = (err) => {
         reject(err);
       };
       FR.readAsArrayBuffer(file);
@@ -64,7 +58,7 @@ export class ImgOrientationRotate {
       let entries_offset;
 
       // SOI marker
-      if (view.getUint16(0, false) != 0xffd8) reject("不是 JPEG 文件");
+      if (view.getUint16(0, false) != 0xffd8) reject('不是 JPEG 文件');
 
       // APP1 marker
       while (offset < len) {
@@ -72,7 +66,7 @@ export class ImgOrientationRotate {
         else offset += 2;
       }
 
-      if (offset >= len) reject("没找到 APP1 标识");
+      if (offset >= len) reject('没找到 APP1 标识');
 
       // now offset point to APP1 marker 0xFFD8
       APP1_offset = offset;
@@ -81,8 +75,7 @@ export class ImgOrientationRotate {
       EXIF_offset = APP1_offset + 4;
 
       // check if  have 'Exif' ascii string: 0x45786966
-      if (view.getUint32(EXIF_offset, false) != 0x45786966)
-        reject("无 EXIF 信息");
+      if (view.getUint32(EXIF_offset, false) != 0x45786966) reject('无 EXIF 信息');
 
       TIFF_offset = EXIF_offset + 6;
 
@@ -102,14 +95,11 @@ export class ImgOrientationRotate {
         // 3 * 1 < 4
         // so the value offset is actually value not the offset to the value
         if (view.getUint16(entries_offset + i * 12, little) == 0x0112) {
-          let resolve_value = view.getUint16(
-            entries_offset + i * 12 + 8,
-            little
-          );
+          let resolve_value = view.getUint16(entries_offset + i * 12 + 8, little);
           resolve(resolve_value);
         }
       }
-      reject("没有 orientation 信息");
+      reject('没有 orientation 信息');
     });
   }
 
@@ -129,11 +119,11 @@ export class ImgOrientationRotate {
       }
 
       image.src = base64;
-      image.onload = async e => {
+      image.onload = async (e) => {
         try {
           const target: any = e.target;
-          const canvas = document.createElement("canvas");
-          let ctx = canvas.getContext("2d");
+          const canvas = document.createElement('canvas');
+          let ctx = canvas.getContext('2d');
           const width = 1200;
           const height = (1200 / target.width) * target.height;
 
@@ -157,7 +147,7 @@ export class ImgOrientationRotate {
 
           ctx = this.rotateCtx(val, ctx, width, height);
           ctx.drawImage(image, 0, 0, width, height);
-          resolve(canvas.toDataURL("image/jpeg", 1.0));
+          resolve(canvas.toDataURL('image/jpeg', 1.0));
         } catch (err) {
           reject(err);
           return;

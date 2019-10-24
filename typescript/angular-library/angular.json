@@ -135,7 +135,7 @@
         }
       }
     },
-    "img-upload": {
+    "ImgUpload": {
       "root": "projects/img-upload",
       "sourceRoot": "projects/img-upload/src",
       "projectType": "library",

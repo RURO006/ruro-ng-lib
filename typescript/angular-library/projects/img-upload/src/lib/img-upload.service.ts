@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { Md5 } from "md5-typescript";
-import { ImgOrientationRotate } from "./img-orientation-rotate";
+import { Injectable } from '@angular/core';
+import { Md5 } from 'md5-typescript';
+import { ImgOrientationRotate } from './img-orientation-rotate';
 
 declare module AWS {
   export class config {
@@ -11,7 +11,7 @@ declare module AWS {
 }
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root',
 })
 export class ImgUploadService {
   bucket: any;
@@ -21,6 +21,7 @@ export class ImgUploadService {
   bucketName: string;
   private isInit = false;
   private isInitializing = false;
+  private loadOnce: Promise<void>;
 
   constructor() {}
 
@@ -31,12 +32,7 @@ export class ImgUploadService {
    * @param bucketName S3 bucketName
    * @param filePath 檔案資料夾位置 ex:'public-img/'
    */
-  init(
-    accessKeyId: string,
-    secretAccessKey: string,
-    bucketName: string,
-    filePath: string = "public-img/"
-  ) {
+  async init(accessKeyId: string, secretAccessKey: string, bucketName: string, filePath: string = 'public-img/') {
     if (this.isInitializing) {
       return;
     }
@@ -45,29 +41,47 @@ export class ImgUploadService {
     this.secretAccessKey = secretAccessKey;
     this.bucketName = bucketName;
     this.filePath = filePath;
-    const script = document.createElement("script");
-    script.src = `https://cdnjs.cloudflare.com/ajax/libs/aws-sdk/2.42.0/aws-sdk.min.js`;
-    script.addEventListener("load", this.onLoadS3Js.bind(this));
-    document.body.appendChild(script);
+    await this.loadScript();
+  }
+
+  async loadScript() {
+    // 只初始化一次
+    if (!this.loadOnce) {
+      return (this.loadOnce = new Promise(async (allOk) => {
+        await new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = `https://cdnjs.cloudflare.com/ajax/libs/aws-sdk/2.42.0/aws-sdk.min.js`;
+          script.addEventListener('load', () => {
+            this.onLoadS3Js();
+            resolve();
+          });
+          document.body.appendChild(script);
+        });
+
+        allOk();
+      }));
+    } else {
+      return this.loadOnce;
+    }
   }
 
   onLoadS3Js() {
     this.isInit = true;
-    console.log("onLoadS3Js");
+    console.log('Load aws-sdk');
   }
 
   checkInit() {
     if (!this.isInit) {
-      throw new Error("請呼叫init初始化");
+      throw new Error('請呼叫init初始化');
     }
     if (!this.accessKeyId) {
-      throw new Error("請設定accessKeyId");
+      throw new Error('請設定accessKeyId');
     }
     if (!this.secretAccessKey) {
-      throw new Error("請設定secretAccessKey");
+      throw new Error('請設定secretAccessKey');
     }
     if (!this.bucketName) {
-      throw new Error("請設定bucketName");
+      throw new Error('請設定bucketName');
     }
   }
 
@@ -100,6 +114,7 @@ export class ImgUploadService {
     isCompressImg = true,
     httpUploadProgress: (loaded: number, total: number) => void = null
   ): Promise<string> {
+    await this.loadScript();
     this.checkInit();
     // 沒有fileName則補上，但是isMd5的話就得用md5當fileName
     if (!fileName) {
@@ -111,7 +126,7 @@ export class ImgUploadService {
     }
 
     // 使用canvas壓縮圖片
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
     let newDataUrl = await this.blobToDataURL(file);
     if (isCompressImg) {
       newDataUrl = await this.compressImage(newDataUrl, canvas);
@@ -126,22 +141,22 @@ export class ImgUploadService {
       aws.config.secretAccessKey = this.secretAccessKey;
       this.bucket = new aws.S3({
         params: {
-          Bucket: this.bucketName
-        }
+          Bucket: this.bucketName,
+        },
       });
       if (isMd5) {
         fileName = Md5.init(newDataUrl);
 
         // 壓縮的圖片類型是.jpg
         if (isCompressImg) {
-          fileName += ".jpg";
+          fileName += '.jpg';
         }
       }
       const params = {
         Key: this.filePath + fileName,
-        Body: blob
+        Body: blob,
       };
-      console.log("bucket upload");
+      console.log('bucket upload');
       // TODO: 需要測試404錯誤會發生什麼事情！
       this.bucket
         .upload(params, (err, data) => {
@@ -153,14 +168,11 @@ export class ImgUploadService {
             resolve(url);
           }
         })
-        .on(
-          "httpUploadProgress",
-          (progress: { loaded: number; total: number }) => {
-            if (typeof httpUploadProgress === "function") {
-              httpUploadProgress(progress.loaded, progress.total);
-            }
+        .on('httpUploadProgress', (progress: { loaded: number; total: number }) => {
+          if (typeof httpUploadProgress === 'function') {
+            httpUploadProgress(progress.loaded, progress.total);
           }
-        );
+        });
     });
   }
 
@@ -183,7 +195,7 @@ export class ImgUploadService {
    * @param dataurl
    */
   dataURLtoBlob(dataurl: string) {
-    const arr = dataurl.split(",");
+    const arr = dataurl.split(',');
     const mime = arr[0].match(/:(.*?);/)[1];
     const bstr = atob(arr[1]);
     let n = bstr.length;
@@ -208,18 +220,15 @@ export class ImgUploadService {
    * @param objUrl objUrl
    * @returns S3 Url
    */
-  async objUrlToS3Url(
-    objUrl: string,
-    progressFunc: (loaded: number, total: number) => void
-  ): Promise<string> {
+  async objUrlToS3Url(objUrl: string, progressFunc?: (loaded: number, total: number) => void): Promise<string> {
     // 只有blob才能使用
-    if (!objUrl || objUrl.indexOf("blob:") !== 0) {
+    if (!objUrl || objUrl.indexOf('blob:') !== 0) {
       return objUrl;
     }
     const result = await this.uploadImageFileToS3(
       await this.objectUrlToBlob(objUrl),
       true,
-      null,
+      undefined,
       true,
       progressFunc
     );
@@ -232,18 +241,15 @@ export class ImgUploadService {
    * @param imgCompressCanvas 需要提供canvas DOM
    * @returns dataUrl
    */
-  async compressImage(
-    dataUrl: string,
-    imgCompressCanvas: HTMLCanvasElement = null
-  ) {
+  async compressImage(dataUrl: string, imgCompressCanvas: HTMLCanvasElement = null) {
     let isNoCanvas = false;
     if (!imgCompressCanvas) {
-      imgCompressCanvas = document.createElement("canvas");
+      imgCompressCanvas = document.createElement('canvas');
       isNoCanvas = true;
     }
     const imgElement = new Image();
     let outputDataURL: Promise<string>;
-    outputDataURL = new Promise<string>(resolve => {
+    outputDataURL = new Promise<string>((resolve) => {
       imgElement.onload = () => {
         const maxSize = 5000000;
         const size = imgElement.width * imgElement.height;
@@ -254,17 +260,17 @@ export class ImgUploadService {
         const newWidth = imgElement.width * m;
         const newHeight = imgElement.height * m;
         const canvas = imgCompressCanvas;
-        const context = canvas.getContext("2d");
+        const context = canvas.getContext('2d');
         canvas.width = newWidth;
         canvas.height = newHeight;
 
         // 先將背景塗白，之後畫透明圖片背景就會是白色
         context.rect(0, 0, newWidth, newHeight);
-        context.fillStyle = "white";
+        context.fillStyle = 'white';
         context.fill();
 
         context.drawImage(imgElement, 0, 0, newWidth, newHeight);
-        resolve(canvas.toDataURL("image/jpeg", 0.5));
+        resolve(canvas.toDataURL('image/jpeg', 0.5));
       };
     });
     imgElement.src = dataUrl;
@@ -281,29 +287,26 @@ export class ImgUploadService {
    * @param dataUrl 圖片
    * @param imgCompressCanvas 需要提供canvas DOM
    */
-  async rotate90Degrees(
-    dataUrl: string,
-    imgCompressCanvas: HTMLCanvasElement = null
-  ) {
+  async rotate90Degrees(dataUrl: string, imgCompressCanvas: HTMLCanvasElement = null) {
     let isNoCanvas = false;
     if (!imgCompressCanvas) {
-      imgCompressCanvas = document.createElement("canvas");
+      imgCompressCanvas = document.createElement('canvas');
       isNoCanvas = true;
     }
     const imgElement = new Image();
     let outputDataURL: Promise<string>;
-    outputDataURL = new Promise<string>(resolve => {
+    outputDataURL = new Promise<string>((resolve) => {
       imgElement.onload = () => {
         const newWidth = imgElement.width;
         const newHeight = imgElement.height;
         const canvas = imgCompressCanvas;
-        const context = canvas.getContext("2d");
+        const context = canvas.getContext('2d');
         canvas.width = newHeight;
         canvas.height = newWidth;
         context.translate(newHeight, 0);
         context.rotate((90 * Math.PI) / 180);
         context.drawImage(imgElement, 0, 0, newWidth, newHeight);
-        resolve(canvas.toDataURL("image/jpeg", 1));
+        resolve(canvas.toDataURL('image/jpeg', 1));
       };
     });
     imgElement.src = dataUrl;
@@ -325,7 +328,8 @@ export class ImgUploadService {
     try {
       const dataUrl = await imgOrientationRotate.fixImg(file);
       objUrl = URL.createObjectURL(this.dataURLtoBlob(dataUrl));
-    } catch {
+    } catch (e) {
+      console.error('error', e);
       objUrl = URL.createObjectURL(file);
     }
     return objUrl;
