@@ -24,20 +24,20 @@ export class LiffExtendService {
   /**
    * 檢查是否登入
    */
-  isLoggedIn() {
+  isLoggedIn(): boolean {
     return liff.isLoggedIn();
   }
 
   /**
    * 檢查是否在liff裡面
    */
-  isInClient() {
+  isInClient(): boolean {
     return liff.isInClient();
   }
   /**
    * 掃描QR code
    */
-  async scanCode() {
+  async scanCode(): Promise<string> {
     await this.loadScript();
     if (!liff.isInClient()) {
       throw new Error(`liff is not in client!`);
