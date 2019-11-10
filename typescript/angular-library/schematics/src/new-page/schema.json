@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "NewPageSchematics",
+  "title": "New page",
+  "description": "新增Angular的Lazy Loading頁面。",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Page名稱",
+
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+
+      "x-prompt": {
+        "message": "Page名稱?",
+        "type": "string"
+      }
+    },
+    "project": {
+      "type": "string",
+      "description": "Generate in specific Angular CLI workspace project"
+    }
+  },
+  "required": ["name"]
+}
