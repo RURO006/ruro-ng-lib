@@ -4,9 +4,17 @@ import { AclDirective } from './acl.directive';
 import { AclGuard } from './acl.guard';
 
 @NgModule({
-  declarations: [AclDirective],
+  declarations: [],
   imports: [],
   providers: [AclService, AclGuard],
-  exports: [AclDirective],
+  exports: [],
 })
 export class AclModule {}
+
+@NgModule({
+  declarations: [AclDirective],
+  imports: [],
+  providers: [],
+  exports: [AclDirective]
+})
+export class AclDirectiveModule {}

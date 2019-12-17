@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { Subject } from "rxjs";
 
 @Injectable()
 export class AclService {
@@ -22,10 +22,17 @@ export class AclService {
    */
   setAcl(acl: string[]) {
     if (!(acl instanceof Array)) {
-      throw new Error('acl必須是string[]');
+      throw new Error("acl必須是string[]");
     }
     this._acl = acl;
     this.onChangeAcl.next(acl);
+  }
+
+  /**
+   * 取得權限 ex:['管理員','一般使用者','老闆']
+   */
+  getAcl(): string[] {
+    return this._acl;
   }
 
   /**
@@ -33,18 +40,22 @@ export class AclService {
    * @param acl ex:['管理員','一般使用者']
    * @param type ex:'any','all'
    */
-  checkPermission(acl: string[], type: string = 'any') {
+  checkPermission(acl: string[], type: string = "any") {
     if (!(acl instanceof Array)) {
-      throw new Error('acl必須是string[]');
+      throw new Error("acl必須是string[]");
     }
     // 沒有設定權限，可以直接通行
     if (acl.length === 0) {
       return true;
     }
-    if (type === 'any') {
-      return acl.some((dataAcl) => this._acl.some((userAcl) => dataAcl === userAcl));
-    } else if (type === 'all') {
-      return acl.every((dataAcl) => this._acl.some((userAcl) => dataAcl === userAcl));
+    if (type === "any") {
+      return acl.some(dataAcl =>
+        this._acl.some(userAcl => dataAcl === userAcl)
+      );
+    } else if (type === "all") {
+      return acl.every(dataAcl =>
+        this._acl.some(userAcl => dataAcl === userAcl)
+      );
     } else {
       throw new Error('type必須是"any"、"all"其中一個');
     }

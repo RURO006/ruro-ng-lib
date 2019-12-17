@@ -3,11 +3,22 @@
 `Service 為必須，Guard、Directive 視用途而定`
 
 ```ts
-import { AclModule } from '@goldenapple/acl';
+import { AclModule, AclDirectiveModule, AclService, AclGuard } from '@goldenapple/acl';
+
+// 直接import module
+// AclModule已經設定providers=[AclService, AclGuard]
 @NgModule({
   declarations: [...],
-  imports: [AclModule],
+  imports: [AclModule, AclDirectiveModule],
   providers: [...],
+})
+export class SomeModule {}
+
+// 或是自己設定providers
+@NgModule({
+  declarations: [...],
+  imports: [AclDirectiveModule],
+  providers: [AclService, AclGuard],
 })
 export class SomeModule {}
 ```
