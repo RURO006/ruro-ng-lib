@@ -244,7 +244,7 @@
       "projectType": "library",
       "root": "projects/acl",
       "sourceRoot": "projects/acl/src",
-      "prefix": "lib",
+      "prefix": "ga",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",

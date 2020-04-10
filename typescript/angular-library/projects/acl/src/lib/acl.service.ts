@@ -22,7 +22,7 @@ export class AclService {
    */
   setAcl(acl: string[]) {
     if (!(acl instanceof Array)) {
-      throw new Error("acl必須是string[]");
+      throw new Error("gaAcl必須是string[]");
     }
     this._acl = acl;
     this.onChangeAcl.next(acl);
@@ -42,7 +42,7 @@ export class AclService {
    */
   checkPermission(acl: string[], type: string = "any") {
     if (!(acl instanceof Array)) {
-      throw new Error("acl必須是string[]");
+      throw new Error("gaAcl必須是string[]");
     }
     // 沒有設定權限，可以直接通行
     if (acl.length === 0) {
@@ -57,7 +57,7 @@ export class AclService {
         this._acl.some(userAcl => dataAcl === userAcl)
       );
     } else {
-      throw new Error('type必須是"any"、"all"其中一個');
+      throw new Error('gaAclType必須是"any"、"all"其中一個');
     }
   }
 }
