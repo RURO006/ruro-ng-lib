@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { AclService } from './acl.service';
-import { AclDirective, AclAutoDisableDirective } from './acl.directive';
+import { AclDirective, AclAutoDisableDirective, AclClassDirective } from './acl.directive';
 import { AclGuard } from './acl.guard';
 
 @NgModule({
@@ -12,9 +12,9 @@ import { AclGuard } from './acl.guard';
 export class AclModule {}
 
 @NgModule({
-    declarations: [AclDirective, AclAutoDisableDirective],
+    declarations: [AclDirective, AclAutoDisableDirective, AclClassDirective],
     imports: [],
     providers: [],
-    exports: [AclDirective, AclAutoDisableDirective],
+    exports: [AclDirective, AclAutoDisableDirective, AclClassDirective],
 })
 export class AclDirectiveModule {}
