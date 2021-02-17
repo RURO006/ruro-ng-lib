@@ -1,6 +1,6 @@
 import { Directive, OnInit, OnDestroy, Input, HostBinding, ElementRef, Output } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { distinct } from 'rxjs/operators';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { AclService } from './acl.service';
 
 @Directive({
@@ -67,7 +67,7 @@ export abstract class GaAclBaseDirective implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.permissionChangeSubscription = this.aclDirective.permissionChange
-            .pipe(distinct())
+            .pipe(distinctUntilChanged())
             .subscribe(this.permissionChange.bind(this));
     }
 

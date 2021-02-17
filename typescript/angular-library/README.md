@@ -13,7 +13,7 @@ package.json name 要加@goldenapple
 
 # 編譯
 
-ng build <name>
+ng build <name> --prod
 編譯出現錯誤"operation not permitted, unlink"時再一次就可以成功了。
 
 # 發佈到 npm
