@@ -8,7 +8,7 @@ export class AclService {
     /**
      * 跳轉頁面，權限不足時會儲存當下頁面，可以用在登入後跳轉回權限不足的頁面。
      */
-    public referrer: string;
+    public referrer?: string;
 
     /**
      * 當呼叫setAcl時會觸發，使用BehaviorSubject初次訂閱會拿到最新的值，訂閱後記得要在ngOnDestroy取消訂閱。

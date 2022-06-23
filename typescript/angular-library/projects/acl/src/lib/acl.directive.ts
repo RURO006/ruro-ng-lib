@@ -40,7 +40,7 @@ export class AclDirective implements OnInit, OnDestroy {
         this.permissionChange.next(value);
     }
 
-    private aclChangeSubscription: Subscription;
+    private aclChangeSubscription?: Subscription;
 
     // 判斷acl，有權限就顯示，沒有就隱藏。
     constructor(el: ElementRef, private aclService: AclService) {}
@@ -53,7 +53,7 @@ export class AclDirective implements OnInit, OnDestroy {
         });
     }
     ngOnDestroy(): void {
-        this.aclChangeSubscription.unsubscribe();
+        this.aclChangeSubscription?.unsubscribe();
     }
 }
 
@@ -62,7 +62,7 @@ export class AclDirective implements OnInit, OnDestroy {
  */
 @Directive()
 export abstract class GaAclBaseDirective implements OnInit, OnDestroy {
-    protected permissionChangeSubscription: Subscription;
+    protected permissionChangeSubscription?: Subscription;
     constructor(public aclDirective: AclDirective) {}
 
     ngOnInit(): void {
@@ -78,7 +78,7 @@ export abstract class GaAclBaseDirective implements OnInit, OnDestroy {
     abstract permissionChange(permission: boolean): void;
 
     ngOnDestroy(): void {
-        this.permissionChangeSubscription.unsubscribe();
+        this.permissionChangeSubscription?.unsubscribe();
     }
 }
 
@@ -91,9 +91,9 @@ export class AclAutoDisableDirective extends GaAclBaseDirective {
      * 是否要在沒有權限時自動disabled
      */
     @Input() gaAclAutoDisable = true;
-    @HostBinding('disabled') disable;
+    @HostBinding('disabled') disable = false;
 
-    constructor(public aclDirective: AclDirective) {
+    constructor(public override aclDirective: AclDirective) {
         super(aclDirective);
     }
 
@@ -130,8 +130,8 @@ export class AclClassDirective extends GaAclBaseDirective {
         return this._gaAclNoPermissionClass;
     }
 
-    @HostBinding('class') classes;
-    constructor(public aclDirective: AclDirective) {
+    @HostBinding('class') classes?: string;
+    constructor(public override aclDirective: AclDirective) {
         super(aclDirective);
     }
 
