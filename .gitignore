@@ -1,2 +1,4 @@
 **/node_modules/*
 package-lock.json
+typescript/angular-library/dist/
+typescript/angular-library/.angular/

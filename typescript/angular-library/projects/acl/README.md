@@ -127,12 +127,7 @@ export class LoginComponent {
 <a [gaAcl]="['管理員','老闆']" [gaAclType]="'all'"> 這個連結只有'老闆'且'管理員'才看的到</a>
 <a [gaAcl]="['管理員','老闆']" [gaAclType]="'any'"> 這個連結'老闆'或'管理員'都看的到</a>
 <button [gaAcl]="['管理員','老闆']" [gaAclAutoDisable]="true">沒權限會被禁用(disabled)</button>
-<button
-    [gaAcl]="['管理員','老闆']"
-    [gaAclNoPermissionClass]="'is-danger'"
-    [gaAclHasPermissionClass]="'is-info'"
->
-    有權限時，class新增'is-info'。
-    沒權限時，class新增'is-danger'。
+<button [gaAcl]="['管理員','老闆']" [gaAclNoPermissionClass]="'is-danger'" [gaAclHasPermissionClass]="'is-info'">
+    有權限時，class新增'is-info'。 沒權限時，class新增'is-danger'。
 </button>
 ```

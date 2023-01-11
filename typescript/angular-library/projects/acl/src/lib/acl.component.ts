@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'lib-acl',
@@ -10,11 +10,6 @@ import { Component, OnInit } from '@angular/core';
   styles: [
   ]
 })
-export class AclComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+export class AclComponent {
 
 }
