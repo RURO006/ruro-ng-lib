@@ -1,10 +1,10 @@
 {
     "name": "@goldenapple/acl",
     "description": "路由守衛，Service為必須，Guard、Directive視用途而定",
-    "version": "2.16.1",
+    "version": "2.17.0",
     "peerDependencies": {
-        "@angular/common": "^16.0.0",
-        "@angular/core": "^16.0.0"
+        "@angular/common": "^17.0.0",
+        "@angular/core": "^17.0.0"
     },
     "dependencies": {
         "tslib": "^2.6.2"
